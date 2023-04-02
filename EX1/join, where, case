@@ -1,0 +1,29 @@
+## 1. Explain in words. What is the purpose of the following query?
+
+select OrderID, OrderDate, coalesce(ShippedDate, 'not yet') as ShippedDate, 
+DATEDIFF(coalesce(ShippedDate, curdate()), OrderDate) as HowLong
+from orders
+order by DATEDIFF(coalesce(ShippedDate, curdate()), OrderDate) Desc
+
+**answer:**
+This query gets its information from the “orders” table, it displays the following columns:
+OrderID
+OrderDate
+ShippedDate - which would either contain the date of the shipment and if it is NULL (missing) it’ll be replaced with ‘not yet’
+HowLong -will either be the amount of days the shipment took and if it hasn’t been shipped yet it’ll display the #days since the order was made.
+Overall the table will be ordered according to the HowLong column in a decreasing order meaning the the largest amount of time will be displayed first.
+
+
+## 2. Write a query that returns for each product that is almost out of stock (there are less than 10 units in stock and on order)
+together (the product number, the product name, the supplier's name, the supplier's phone number and how many additional units are needed
+Order to reach a total of 100 units in stock. You must also display products whose supplier information is missing:
+
+**answer:**
+SELECT products.ProductID, products.ProductName,coalesce(products.SupplierID, "empty")
+,coalesce(suppliers.CompanyName, "empty") , coalesce(suppliers.Phone , "empty"), (100- products.UnitsInStock) as
+`to order`
+FROM products JOIN suppliers ON products.SupplierID= suppliers.SupplierID
+ WHERE (products.UnitsInStock+products.UnitsOnOrder)<10
+ ORDER BY products.SupplierID
+ 
+ ##3. 
